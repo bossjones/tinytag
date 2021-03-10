@@ -24,13 +24,15 @@ from pytest import raises
 from tinytag import TinyTagException, TinyTag, ID3, Ogg, Wave, Flac
 from tinytag.tinytag import Wma, MP4
 
-try:
-    from collections import OrderedDict
-except ImportError:
-    OrderedDict = dict  # python 2.6 and 3.2 compat
+import collections
+
+# try:
+#     from collections import OrderedDict
+# except ImportError:
+#     OrderedDict = dict  # python 2.6 and 3.2 compat
 
 
-testfiles = OrderedDict([
+testfiles = collections.OrderedDict([
     # MP3
     ('samples/vbri.mp3', {'channels': 2, 'samplerate': 44100, 'track_total': None, 'duration': 0.47020408163265304, 'album': 'I Can Walk On Water I Can Fly', 'year': '2007', 'title': 'I Can Walk On Water I Can Fly', 'artist': 'Basshunter', 'track': '01', 'filesize': 8192, 'audio_offset': 1007, 'genre': '(3)Dance', 'comment': '\ufeff\ufeffRipped by THSLIVE', 'composer': ''}),
     ('samples/cbr.mp3', {'channels': 2, 'samplerate': 44100, 'track_total': None, 'duration': 0.49, 'album': 'I Can Walk On Water I Can Fly', 'year': '2007', 'title': 'I Can Walk On Water I Can Fly', 'artist': 'Basshunter', 'track': '01', 'filesize': 8186, 'audio_offset': 246, 'bitrate': 128.0, 'genre': 'Dance', 'comment': 'Ripped by THSLIVE'}),
@@ -194,7 +196,7 @@ def test_unsubclassed_tinytag_parse_tag():
 def test_mp3_length_estimation():
     ID3.set_estimation_precision(0.7)
     tag = TinyTag.get(os.path.join(testfolder, 'samples/silence-44-s-v1.mp3'))
-    assert 3.5 < tag.duration < 4.0 
+    assert 3.5 < tag.duration < 4.0
 
 @pytest.mark.xfail(raises=TinyTagException)
 def test_unexpected_eof():

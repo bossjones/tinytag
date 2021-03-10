@@ -33,7 +33,14 @@
 from __future__ import print_function
 
 import json
-from collections import MutableMapping, OrderedDict
+
+import collections
+
+try:  # python 3
+    from collections import abc
+except ImportError:  # python 2
+    import collections as abc
+
 import codecs
 from functools import reduce
 import struct
@@ -175,7 +182,7 @@ class TinyTag(object):
             return tag
 
     def __str__(self):
-        return json.dumps(OrderedDict(sorted(self.as_dict().items())))
+        return json.dumps(collections.OrderedDict(sorted(self.as_dict().items())))
 
     def __repr__(self):
         return str(self)
@@ -404,7 +411,7 @@ class MP4(TinyTag):
                 fh.seek(4, os.SEEK_CUR)
             sub_path = path.get(atom_type, None)
             # if the path leaf is a dict, traverse deeper into the tree:
-            if issubclass(type(sub_path), MutableMapping):
+            if issubclass(type(sub_path), abc.MutableMapping):
                 atom_end_pos = fh.tell() + atom_size
                 self._traverse_atoms(fh, path=sub_path, stop_pos=atom_end_pos,
                                      curr_path=curr_path + [atom_type])
